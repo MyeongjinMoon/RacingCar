@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Myeongjin
 {
-	public class CFrontWheel : MonoBehaviour
+	public class CFrontLeftWheel : MonoBehaviour
 	{
 		private const float CARWEIGHT = 2200.0f;
 		private const float MAXSPEED = 30.0f;
@@ -43,7 +43,7 @@ namespace Myeongjin
         {
             if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && angle > -MAXHANDLEANGLE)
                 angle -= Time.fixedDeltaTime * rotatePower;
-            else if ((Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) && angle < MAXHANDLEANGLE)
+            else if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && angle < MAXHANDLEANGLE)
                 angle += Time.fixedDeltaTime * rotatePower;
             else
             {
@@ -54,19 +54,17 @@ namespace Myeongjin
                 else
                     angle = 0;
             }
-            if (angle > 0)
+            if (angle < 0)
             {
-                Quaternion quaternion = transform.localRotation;
-                quaternion.y = GetAckermannAngle(angle);
-                fixedAngle = quaternion.y;
-                transform.localRotation = quaternion;
+                transform.localEulerAngles = new Vector3(0, angle, 90);
             }
             else
             {
-                Quaternion quaternion = transform.localRotation;
-                quaternion.y = angle;
-                transform.localRotation = quaternion;
-                fixedAngle = angle;
+                transform.localEulerAngles = new Vector3(0, GetAckermannAngle(angle), 90);
+                //Vector3 currentEulerAngles = transform.rotation.eulerAngles;
+                //fixedAngle = GetAckermannAngle(angle);
+                //currentEulerAngles.y = fixedAngle;
+                //transform.rotation = Quaternion.Euler(currentEulerAngles);
             }
         }
         float GetAckermannAngle(float angle)
